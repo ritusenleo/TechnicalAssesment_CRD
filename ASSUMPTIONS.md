@@ -68,24 +68,9 @@ Account extras:
 
 ---
 
-## 3. Test design
 
-| Assumption | Effect on `rebalance.feature` / `RebalanceSteps` |
-| --- | --- |
-| Glue is **Java** (`RebalanceSteps.java`), not JS. | Cucumber-JVM + TestNG. |
-| Two APIs, two Given/When styles | Scalar steps hit `calculate`; account tables hit `rebalance`. |
-| Happy path is the assignment table | Scenario `Rebalance Account ABC to target weights` is the acceptance test the brief asks for. |
-| Outlines expand to separate TestNG tests | 3 + 6 examples plus the other scenarios → **25** tests. |
-| Errors are `IllegalArgumentException` messages, compared as **exact strings**. | Steps do not use regex or i18n. |
-| Failed rebalance must not return a list | `accountResults` stays `null`; `no rebalance results should be returned` asserts that. |
-| Data tables parse percents/prices with `Double.parseDouble` | Same `double` path as production. |
-| Manual Excel workbook is a traceability aid, not an extra runner | `docs/Manual_Test_Cases_Feature_Mapping.xlsx`. |
 
-Scenarios that document product choices rather than the Word table: empty holdings, null account, blank ticker, all-or-nothing invalid price, asset `0` on an account, mix &lt; 100%, mix &gt; 100%, fractional mix totaling 100, rounding 2.5, target 0 and 100, validation order (asset before price).
-
----
-
-## 4. Technical
+## 3. Technical
 
 | Assumption | Detail |
 | --- | --- |
@@ -97,14 +82,3 @@ Scenarios that document product choices rather than the Word table: empty holdin
 
 ---
 
-## 5. Assignment vs implementation checklist
-
-| Brief requirement | Where it is met |
-| --- | --- |
-| Get to zero target variance (buy/sell to target %) | `RebalancingService` formula and ABC scenario |
-| Manual test cases | Excel mapping + Gherkin as living manual script |
-| Automated tests for share counts per security | `rebalance.feature` + `RebalanceSteps` |
-| Note assumptions | This file |
-| Sample IBM / ORCL math | BUY 67 / SELL 45 (rounded) |
-
-Nothing in the brief specified rounding mode, empty accounts, or 100% mix enforcement; those are the team’s product rules above.
